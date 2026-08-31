@@ -5,7 +5,8 @@ WORKDIR /app
 RUN chown -R node:node /app
 USER node
 COPY --chown=node:node frontend/package.json ./
-RUN npm install --no-audit --no-fund
+RUN npm install --no-audit --no-fund --ignore-scripts
+RUN test -x node_modules/@esbuild/linux-x64/bin/esbuild
 COPY --chown=node:node frontend/ ./
 RUN npm run build
 
