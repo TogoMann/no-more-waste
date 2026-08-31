@@ -23,7 +23,7 @@ services:
   frontend:
     build:
       context: .
-      dockerfile: frontend/Dockerfile
+      dockerfile: ${FRONTEND_DOCKERFILE:-frontend/Dockerfile}
     container_name: nmw-frontend
     depends_on:
       - backend

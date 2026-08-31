@@ -62,6 +62,26 @@ le frontend n'a donc jamais besoin de connaître le port public de l'API.
 En production, `PUBLIC_URL` doit pointer vers le domaine réel du site,
 par exemple `https://nomorewaste.mondomaine.fr`.
 
+## Compilation du frontend
+
+Deux modes sont disponibles, sélectionnés par la variable `FRONTEND_DOCKERFILE` :
+
+| Valeur | Comportement |
+|--------|--------------|
+| `frontend/Dockerfile` (défaut) | Compile le frontend dans l'image (Node + Vite) |
+| `frontend/Dockerfile.prebuilt` | Copie simplement `frontend/dist` dans Nginx |
+
+Le mode `prebuilt` sert aux serveurs dont la configuration Docker empêche l'exécution
+de processus enfants pendant le build (esbuild échoue alors en `ENOTCONN` ou `EACCES`).
+Le dossier `frontend/dist` est alors versionné et régénéré depuis un poste de développement :
+
+```bash
+./scripts/build-frontend.sh
+```
+
+Ce script compile le frontend dans un conteneur jetable et extrait `frontend/dist`.
+Il doit être relancé après chaque modification du frontend, avant de committer.
+
 ## Déploiement
 
 - `deploy.sh` : installation et lancement local (Go + Node), lit automatiquement `.env`.
