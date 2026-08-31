@@ -129,7 +129,7 @@ func main() {
 		DB:        db,
 		JWTSecret: jwtSecret,
 		Stripe:    stripeClient,
-		PublicURL: env("PUBLIC_URL", "http://localhost:8081"),
+		PublicURL: env("PUBLIC_URL", "http://localhost:9080"),
 		DuesCents: duesCents,
 	}
 	mux := http.NewServeMux()
