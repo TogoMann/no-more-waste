@@ -1,8 +1,12 @@
 FROM node:20-alpine AS build
+ENV npm_config_cache=/tmp/.npm
+ENV npm_config_update_notifier=false
 WORKDIR /app
-COPY frontend/package.json ./
-RUN npm install
-COPY frontend/ ./
+RUN chown -R node:node /app
+USER node
+COPY --chown=node:node frontend/package.json ./
+RUN npm install --no-audit --no-fund
+COPY --chown=node:node frontend/ ./
 RUN npm run build
 
 FROM nginx:1.25-alpine
