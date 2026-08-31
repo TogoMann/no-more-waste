@@ -43,9 +43,29 @@ avec paramètres de chemin (`{id}`).
 - Autorisation par rôle appliquée côté serveur (source de vérité) et côté client (UX).
 - Clés étrangères et contraintes d'unicité au niveau base.
 
+## Ports et configuration
+
+Les ports d'exposition sont centralisés dans le fichier `.env` à la racine du projet
+(modèle fourni dans `.env.example`) :
+
+| Variable | Défaut | Rôle |
+|----------|--------|------|
+| `FRONTEND_PORT` | `9080` | Port public du site (Nginx) |
+| `API_PORT` | `9081` | Port public de l'API Go |
+| `PUBLIC_URL` | `http://localhost:9080` | URL publique du site, utilisée pour les retours de paiement Stripe |
+| `DEV_PORT` | `5173` | Port de Vite en mode développement (`deploy.sh`) |
+
+À l'intérieur du réseau Docker, l'API écoute toujours sur `8080` et Nginx sur `80` :
+seuls les ports publiés changent. Nginx proxifie `/api/` vers `http://backend:8080`,
+le frontend n'a donc jamais besoin de connaître le port public de l'API.
+
+En production, `PUBLIC_URL` doit pointer vers le domaine réel du site,
+par exemple `https://nomorewaste.mondomaine.fr`.
+
 ## Déploiement
 
-- `deploy.sh` : installation et lancement local (Go + Node).
-- `docker-compose.yml` : build et exécution conteneurisés (backend + frontend Nginx).
+- `deploy.sh` : installation et lancement local (Go + Node), lit automatiquement `.env`.
+- `docker-compose.yml` : build et exécution conteneurisés (backend + frontend Nginx),
+  ports pilotés par `FRONTEND_PORT` et `API_PORT`.
 - `.github/workflows/ci.yml` : intégration continue (build + tests backend, build frontend).
 - `database/backup.sh` : sauvegarde horodatée de la base avec rotation.

@@ -5,18 +5,19 @@ services:
       dockerfile: backend/Dockerfile
     container_name: nmw-backend
     environment:
-      JWT_SECRET: change-me-in-production
-      ADMIN_EMAIL: admin@nomorewaste.org
-      ADMIN_PASSWORD: admin123
-      SEED_DEMO: "true"
-      PUBLIC_URL: http://localhost:8081
-      DUES_AMOUNT_CENTS: "2000"
-      STRIPE_PUBLIC_KEY: pk_test_51TqxnxGrveXpz3HG2iv6PY8WAEWhcp6BA08aIcHehvHiogddG7NYc4pNJ7IznC7tLrXP3sDM4CLCdaGX0kBLIHzX00PVZgCvnx
-      STRIPE_WEBHOOK_SECRET: whsec_cc886fdcf142a29a27013feedba062b6145ef3422b27899cb4fabdadc70f22c9
+      JWT_SECRET: ${JWT_SECRET:-change-me-in-production}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@nomorewaste.org}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-admin123}
+      SEED_DEMO: ${SEED_DEMO:-true}
+      PUBLIC_URL: ${PUBLIC_URL:-http://localhost:9080}
+      DUES_AMOUNT_CENTS: ${DUES_AMOUNT_CENTS:-2000}
+      STRIPE_PUBLIC_KEY: ${STRIPE_PUBLIC_KEY:-}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-}
     volumes:
       - backend-data:/app/data
     ports:
-      - "8080:8080"
+      - "${API_PORT:-9081}:8080"
     restart: unless-stopped
 
   frontend:
@@ -27,7 +28,7 @@ services:
     depends_on:
       - backend
     ports:
-      - "8081:80"
+      - "${FRONTEND_PORT:-9080}:80"
     restart: unless-stopped
 
 volumes:

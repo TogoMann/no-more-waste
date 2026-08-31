@@ -1,3 +1,4 @@
+.env
 backend/nomorewaste*.db
 backend/nomorewaste-server
 node_modules/
